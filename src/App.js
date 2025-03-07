@@ -1,24 +1,43 @@
-import logo from './logo.svg';
-import './App.css';
+import { BrowserRouter as Router, Route, Routes, Link } from 'react-router-dom';
+import Home from './pages/Home';
+import Dashboard from './pages/Dashboard';
+import DesignList from './components/DesignList';
+import DesignForm from './components/DesignForm';
+import HeatGainCalculator from './components/HeatGainCalculator';
+import CityRankings from './components/CityRankings';
+import CompareDesigns from './components/CompareDesign';
+import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
+import { Container, AppBar, Toolbar, Typography, Button } from '@mui/material';
+
+const queryClient = new QueryClient();
 
 function App() {
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
+    <QueryClientProvider client={queryClient}>
+      <Router>
+        <AppBar position="static">
+          <Toolbar>
+            <Typography variant="h6" sx={{ flexGrow: 1 }}>Building Energy Analysis</Typography>
+            <Button color="inherit" component={Link} to="/">Home</Button>
+            <Button color="inherit" component={Link} to="/dashboard">Dashboard</Button>
+            <Button color="inherit" component={Link} to="/create">Create Design</Button>
+            <Button color="inherit" component={Link} to="/calculate">Heat Gain</Button>
+            <Button color="inherit" component={Link} to="/rankings">Rankings</Button>
+            <Button color="inherit" component={Link} to="/compare">Compare Designs</Button>
+          </Toolbar>
+        </AppBar>
+        <Container>
+          <Routes>
+            <Route path="/" element={<Home />} />
+            <Route path="/dashboard" element={<Dashboard />} />
+            <Route path="/create" element={<DesignForm />} />
+            <Route path="/calculate" element={<HeatGainCalculator />} />
+            <Route path="/rankings" element={<CityRankings />} />
+            <Route path="/compare" element={<CompareDesigns />} />
+          </Routes>
+        </Container>
+      </Router>
+    </QueryClientProvider>
   );
 }
 
