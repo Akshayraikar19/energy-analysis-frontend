@@ -8,7 +8,7 @@ const Home = () => {
     <Container>
       <Typography variant="h3">Building Energy Analysis System</Typography>
       <Button variant="contained" onClick={() => navigate('/create')}>Create Design</Button>
-      <Button variant="contained" onClick={() => navigate('/calculate')}>Heat Gain Calculator</Button>
+      <Button variant="contained" onClick={() => navigate('/heat-gain-calculator')}>Heat Gain Calculator</Button>
       <Button variant="contained" onClick={() => navigate('/rankings')}>City Rankings</Button>
     </Container>
   );

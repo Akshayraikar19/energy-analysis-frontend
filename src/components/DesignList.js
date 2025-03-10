@@ -1,9 +1,28 @@
 import { useEffect, useState } from 'react';
 import { getDesigns, deleteDesign, updateDesign } from '../services/api';
-import { Button, List, ListItem, Container, Typography, TextField, Dialog, DialogActions, DialogContent, DialogTitle } from '@mui/material';
+import {
+  Container,
+  Typography,
+  Table,
+  TableBody,
+  TableCell,
+  TableContainer,
+  TableHead,
+  TableRow,
+  Paper,
+  Button,
+  Dialog,
+  DialogActions,
+  DialogContent,
+  DialogTitle,
+  TextField,
+  CircularProgress
+} from '@mui/material';
 
 const DesignList = () => {
   const [designs, setDesigns] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
   const [open, setOpen] = useState(false);
   const [currentDesign, setCurrentDesign] = useState({ _id: '', name: '', city: '' });
 
@@ -12,8 +31,14 @@ const DesignList = () => {
   }, []);
 
   const fetchDesigns = async () => {
-    const response = await getDesigns();
-    setDesigns(response.data);
+    try {
+      const response = await getDesigns();
+      setDesigns(response.data);
+    } catch (err) {
+      setError('Failed to fetch designs.');
+    } finally {
+      setLoading(false);
+    }
   };
 
   const handleDelete = async (id) => {
@@ -39,22 +64,56 @@ const DesignList = () => {
 
   return (
     <Container>
-      <Typography variant="h4">Design List</Typography>
-      <List>
-        {designs.map((design) => (
-          <ListItem key={design._id}>
-            {design.name} - {design.city}
-            <Button onClick={() => handleEdit(design)} color="primary">Edit</Button>
-            <Button onClick={() => handleDelete(design._id)} color="error">Delete</Button>
-          </ListItem>
-        ))}
-      </List>
+      <Typography variant="h4" gutterBottom>Design List</Typography>
 
+      {loading ? (
+        <CircularProgress />
+      ) : error ? (
+        <Typography color="error">{error}</Typography>
+      ) : (
+        <TableContainer component={Paper}>
+          <Table>
+            <TableHead>
+              <TableRow>
+                <TableCell><strong>Name</strong></TableCell>
+                <TableCell><strong>City</strong></TableCell>
+                <TableCell><strong>Actions</strong></TableCell>
+              </TableRow>
+            </TableHead>
+            <TableBody>
+              {designs.map((design) => (
+                <TableRow key={design._id}>
+                  <TableCell>{design.name}</TableCell>
+                  <TableCell>{design.city}</TableCell>
+                  <TableCell>
+                    <Button onClick={() => handleEdit(design)} color="primary">Edit</Button>
+                    <Button onClick={() => handleDelete(design._id)} color="error">Delete</Button>
+                  </TableCell>
+                </TableRow>
+              ))}
+            </TableBody>
+          </Table>
+        </TableContainer>
+      )}
+
+      {/* Edit Dialog */}
       <Dialog open={open} onClose={handleClose}>
         <DialogTitle>Edit Design</DialogTitle>
         <DialogContent>
-          <TextField label="Name" fullWidth value={currentDesign.name} onChange={(e) => setCurrentDesign({ ...currentDesign, name: e.target.value })} />
-          <TextField label="City" fullWidth value={currentDesign.city} onChange={(e) => setCurrentDesign({ ...currentDesign, city: e.target.value })} />
+          <TextField 
+            label="Name" 
+            fullWidth 
+            value={currentDesign.name} 
+            onChange={(e) => setCurrentDesign({ ...currentDesign, name: e.target.value })} 
+            margin="dense"
+          />
+          <TextField 
+            label="City" 
+            fullWidth 
+            value={currentDesign.city} 
+            onChange={(e) => setCurrentDesign({ ...currentDesign, city: e.target.value })} 
+            margin="dense"
+          />
         </DialogContent>
         <DialogActions>
           <Button onClick={handleClose} color="secondary">Cancel</Button>
