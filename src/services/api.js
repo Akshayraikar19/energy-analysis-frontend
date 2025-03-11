@@ -9,4 +9,10 @@ export const updateDesign = async (id, data) => axios.put(`${API_URL}/designs/${
 export const deleteDesign = async (id) => axios.delete(`${API_URL}/designs/${id}`);
 export const calculateHeatGain = async (data) => axios.post(`${API_URL}/analysis/calculate`, data);
 export const compareDesigns = async () => axios.get(`${API_URL}/analysis/compare`);
-export const getCityRankings = async () => axios.get(`${API_URL}/analysis/cities`);
+
+export const getCityRankings = async (A, SHGC) => {
+    return axios.get(`${API_URL}/analysis/cities`, {
+      params: { A, SHGC }
+    });
+  };
+  
