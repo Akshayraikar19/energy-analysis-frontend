@@ -21,7 +21,7 @@ const CityRankings = () => {
   useEffect(() => {
     async function fetchRankings() {
       try {
-        const response = await getCityRankings();
+        const response = await getCityRankings(500, 0.6); // Pass A and SHGC as params
         setRankings(response.data);
       } catch (err) {
         setError('Failed to fetch city rankings.');
@@ -34,7 +34,7 @@ const CityRankings = () => {
 
   return (
     <Container>
-      <Typography variant="h4" gutterBottom>City Performance Rankings</Typography>
+      <Typography variant="h4" gutterBottom>City Cooling Cost Rankings</Typography>
 
       {loading ? (
         <CircularProgress />
@@ -47,7 +47,7 @@ const CityRankings = () => {
               <TableRow>
                 <TableCell><strong>Rank</strong></TableCell>
                 <TableCell><strong>City</strong></TableCell>
-                <TableCell><strong>Score</strong></TableCell>
+                <TableCell><strong>Cooling Cost (Rs)</strong></TableCell>
               </TableRow>
             </TableHead>
             <TableBody>
@@ -55,7 +55,7 @@ const CityRankings = () => {
                 <TableRow key={index}>
                   <TableCell>{index + 1}</TableCell>
                   <TableCell>{city.city}</TableCell>
-                  <TableCell>{city.score}</TableCell>
+                  <TableCell>{city.coolingCost.toFixed(2)}</TableCell> 
                 </TableRow>
               ))}
             </TableBody>
@@ -67,3 +67,4 @@ const CityRankings = () => {
 };
 
 export default CityRankings;
+
